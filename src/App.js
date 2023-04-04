@@ -4,8 +4,8 @@ import axios from 'axios';
 import BarChart from './components/barGraph';
 import moment from 'moment';
 
-const server = 'http://localhost:8090';
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImplYW5AZ21haWwuY29tIiwiaWQiOiIwNjZkOWRkMy02MDAwLTQwODgtYTUzMC1iNjUwYWMyZTIxNDUiLCJpYXQiOjE2ODAyNTIxMTB9.oc8xAJATsIUbmcG-z8kTc0qp7oswsAwSZeSd7O4D3_g';
+const server = process.env.REACT_APP_SERVER;
+const token = process.env.REACT_APP_TOKEN;
 
 function App() {
   const [productsApidata, setProductsApidata] = useState(null)
