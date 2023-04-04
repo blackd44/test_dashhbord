@@ -89,3 +89,56 @@
     max-width: 75%;
   }
 }
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+
+  form {
+    padding: 2rem;
+    background-color: #fff1;
+    box-shadow: 0 0 15px -5px #000a;
+    border-radius: 10px;
+    width: 500px;
+    max-width: 90%;
+    @include flex-column();
+    gap: 1rem;
+
+    h3 {
+      text-align: center;
+    }
+
+    label {
+      @include flex-column();
+      gap: .5rem;
+    }
+
+    input, button {
+      display: block;
+      width: 100%;
+      padding: .7rem 1rem;
+      font-size: 1em;
+      border: none;
+      background-color: #202124;
+      color: #bbb;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #fa0;
+      color: #111;
+      font-weight: bold;
+
+      &:disabled {
+        background-color: #333;
+        color: #bbb;
+      }
+      &:hover {
+        box-shadow: 0 0 15px -5px #eee;
+      }
+    }
+  }
+}

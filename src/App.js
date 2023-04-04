@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './App.scss';
 import axios from 'axios';
 import BarChart from './components/barGraph';
 import moment from 'moment';
 
 const server = process.env.REACT_APP_SERVER;
-const token = process.env.REACT_APP_TOKEN;
+// const token = process.env.REACT_APP_TOKEN;
 
 function App() {
+  const [token, setToken] = useState(sessionStorage.getItem('token'))
   const [productsApidata, setProductsApidata] = useState(null)
   const [start, setStart] = useState(moment().subtract(1, 'year').format('LLL'))
   const [end, setEnd] = useState(moment().format('LLL'))
@@ -25,7 +26,7 @@ function App() {
       .then(data => {
         setProductsApidata(data.data)
       })
-  }, [start, end])
+  }, [start, end, token])
 
   useEffect(() => {
     setEnd(moment().format('LLL'))
@@ -39,7 +40,7 @@ function App() {
       .then(data => {
         setApidata(data.data)
       })
-  }, [graphRange])
+  }, [graphRange, token])
 
   useEffect(() => {
     setGraphData({
@@ -63,6 +64,52 @@ function App() {
     })
   }, [apidata])
 
+
+  // login
+  const [email, setEmail] = useState('')
+  const [password, setPass] = useState('')
+  const button = useRef()
+
+  const login = useCallback((e) => {
+    e.preventDefault();
+    axios
+      .post(`${server}/users/login`, {
+        email, password
+      }).then(res => {
+        if (res.status === 200) {
+          sessionStorage.setItem('token', res.data.token)
+          setToken(res.data.token);
+        }
+      }).catch(res => {
+        console.warn('error')
+        if (button.current && button.current !== null) {
+          button.current.disabled = true
+        }
+      })
+  }, [email, password])
+
+  useEffect(() => {
+    if (email && password && button.current && button.current !== null) {
+      button.current.disabled = false
+    }
+  }, [email, password])
+
+  if (!token || token === null) return (
+    <div className='login'>
+      <form onSubmit={login}>
+        <h3>Sign In</h3>
+        <label>
+          <div>Email:</div>
+          <input type="text" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </label>
+        <label>
+          <div>Password: </div>
+          <input type="password" placeholder="password" value={password} onChange={(e) => setPass(e.target.value)} />
+        </label>
+        <button disabled ref={button}>Sign In</button>
+      </form>
+    </div>
+  )
   return (
     <div>
       <div className='statistics'>
